@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>Categorie</h1>
+<a th:href="@{/admin/categoria/create}">Crea nuova Categoria</a>
+
+
+<ul th:if="${not #lists.isEmpty(categorie)}">
+    <li th:each="categoria : ${categorie}" th:object="${categoria}">
+       <p th:text="${categoria.nome}"></p>
+       
+       <a th:href="@{/admin/categoria/delete/{id} (id=${categoria.id})}">Cancella</a>
+    </li>
+</ul>
+<p th:unless="${not #lists.isEmpty(fotos)}" th:text="${message}"></p>
+
+<a th:href="@{/admin/foto}">>Torna alle Foto</a>
+
+
+</body>
+</html>

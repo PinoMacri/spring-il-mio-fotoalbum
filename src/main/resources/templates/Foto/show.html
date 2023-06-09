@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:object="${foto}">
+		<h1>[[*{id}]] - [[*{titolo}]] - [[*{descrizione}]] - [[*{url}]] -
+			[[*{visibile}]]</h1>
+		<a href="/admin/foto">Torna alle foto</a>
+
+		<h2>Categorie D'Appartenza</h2>
+		<ul>
+			<li th:each="categoria : ${foto.categorie}"
+				th:text="${categoria.nome}"></li>
+		</ul>
+	</div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<form th:action="@{/admin/categoria/store}" th:object="${categoria}"
+		method="post">
+
+		<label>Nome: <input type="text" th:field="*{nome}" /></label> <label
+			style="color: red"
+			th:if="${errors != null && errors.hasFieldErrors('nome')}">
+			[[${errors.getFieldError('nome').getDefaultMessage}]] </label> <br> <label>Descrizione
+			<input type="text" th:field="*{descrizione}" />
+		</label> <label style="color: red"
+			th:if="${errors != null && errors.hasFieldErrors('descrizione')}">
+			[[${errors.getFieldError('descrizione').getDefaultMessage}]] </label> <br>
+		<input type="submit" value="Aggiungi" />
+	</form>
+	<a href="/admin/categoria">Torna alle categorie</a>
+</body>
+</html>
