@@ -10,7 +10,9 @@
 		th:action="@{/admin/foto/update/{id}(id=${foto.id})}">
 
 		<label>titolo</label> <input type="text" name="titolo"
-			th:value="*{titolo}"> <label style="color: red"
+			th:value="*{titolo}"> 
+			 <small  th:if="${errorMessage}" th:text="${errorMessage}"></small>
+			<label style="color: red"
 			th:if="${errors != null && errors.hasFieldErrors('titolo')}">
 			[[${errors.getFieldError('titolo').getDefaultMessage}]] </label> <br> <label>descrizione</label>
 		<input type="text" name="descrizione" th:value="*{descrizione}">
@@ -31,7 +33,7 @@
        th:value="${categoria.id}"
        type="checkbox"
        name="categorieSelezionate"
-       th:checked="${categorieSelezionate.contains(categoria.id)}">
+       th:checked="${!#lists.isEmpty(categorieSelezionate) && categorieSelezionate.contains(categoria.id)}">
 
 
 

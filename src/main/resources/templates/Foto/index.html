@@ -5,28 +5,38 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h1>Foto</h1>
-<a th:href="@{/admin/foto/create}">Crea nuova Foto</a>
+	<h1>Foto</h1>
+	<h1>
+		Benvenuto <span th:text="${username}"></span>!
+	</h1>
+	<a th:if="${isAdmin}" th:href="@{/admin/foto/create}">Crea nuova
+		Foto</a>
 
 
-<form th:action="@{/admin/foto/titolo}" method="post" >
-<label>Nome Foto</label>
-<input type="text" name="titolo" th:value=${titolo}>
-<br>
-<input type="submit" value="search">
-</form>
 
 
-<ul th:if="${not #lists.isEmpty(fotos)}">
-    <li th:each="foto : ${fotos}" th:object="${foto}">
-       <a th:href="@{/admin/foto/{id}(id=${foto.id})}" th:text="${foto.titolo}"></a>
-       
-       <a th:href="@{/admin/foto/edit/{id} (id=${foto.id})}">Modifica</a>
-       <a th:href="@{/admin/foto/delete/{id} (id=${foto.id})}">Cancella</a>
-    </li>
-</ul>
-<p th:unless="${not #lists.isEmpty(fotos)}" th:text="${message}"></p>
-<a th:href="@{/admin/categoria}">Vai alle Categorie</a>
-<a th:href="@{/logout}">Logout</a>
+
+
+	<form th:action="@{/admin/foto/titolo}" method="post">
+		<label>Nome Foto</label> <input type="text" name="titolo"
+			th:value=${titolo}> <br> <input type="submit"
+			value="search">
+	</form>
+	<ul>
+		<li th:each="foto : ${fotos}" th:object="${foto}"><a
+			th:href="@{/admin/foto/{id}(id=${foto.id})}" th:text="${foto.titolo}"></a>
+			<tr>
+				
+				<td th:if="${isSuperAdmin}" th:text="${foto.user.username}"></td>
+			</tr> <a th:href="@{/admin/foto/edit/{id} (id=${foto.id})}">Modifica</a> <a
+			th:href="@{/admin/foto/delete/{id} (id=${foto.id})}">Cancella</a></li>
+	</ul>
+
+
+
+
+	<p th:unless="${not #lists.isEmpty(fotos)}" th:text="${message}"></p>
+	<a th:href="@{/admin/categoria}">Vai alle Categorie</a>
+	<a th:href="@{/logout}">Logout</a>
 </body>
 </html>

@@ -1,16 +1,16 @@
 package com.example.principal.model;
 
 import java.util.List;
-import java.util.Objects;
 
+import com.example.principal.auth.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -28,6 +28,8 @@ public class Categoria {
 	@JsonIgnore
 	@ManyToMany(mappedBy = "categorie")
 	private List<Foto> foto;
+	@ManyToOne
+    private User user;
 
 	public Categoria() {
 	}
@@ -69,6 +71,14 @@ public class Categoria {
 		return foto;
 	}
 
+	public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
 	public void setFoto(List<Foto> foto) {
 		this.foto = foto;
 	}

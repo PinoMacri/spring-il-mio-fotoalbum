@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+    <h1>Create User</h1>
+    <form th:action="@{/users/store}" th:object="${user}" method="post">
+        <label>Username:</label>
+        <input type="text" th:field="*{username}" />
+        <br/>
+        <label>Password:</label>
+        <input type="password" th:field="*{password}" />
+        <br/>
+
+
+        <button type="submit">Create</button>
+    </form>
+</body>
+</html>

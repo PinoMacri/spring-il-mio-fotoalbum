@@ -9,6 +9,7 @@
 	<form method="POST" th:action="@{/admin/foto/store}">
 
 		<label>titolo</label> <input type="text" name="titolo" th:value="*{titolo}">
+		 <small  th:if="${errorMessage}" th:text="${errorMessage}"></small>
 		<label style="color: red"
 			th:if="${errors != null && errors.hasFieldErrors('titolo')}">
 			[[${errors.getFieldError('titolo').getDefaultMessage}]] 
@@ -36,13 +37,14 @@
 		<input type="checkbox" name="visibile" th:checked="${foto.visibile}"/> <label>Pubblica foto</label>
 
 		 <br>
-<label>Categorie</label>
+
 <label>Categorie</label>
 <div th:each="categoria : ${categorie}">
     <input th:id="${'categoria' + categoria.id}" th:value="${categoria.id}" type="checkbox" name="categorieSelezionate"
-           th:checked="${categorieSelezionate.contains(categoria.id)}"/>
+           th:checked="${!#lists.isEmpty(categorieSelezionate) && categorieSelezionate.contains(categoria.id)}"/>
     <label th:for="${'categoria' + categoria.id}" th:text="${categoria.nome}"></label>
 </div>
+
 
 
 

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.principal.auth.User;
 import com.example.principal.model.Categoria;
 import com.example.principal.repository.CategoriaRepository;
 
@@ -32,6 +33,11 @@ public class CategoriaService {
 
 	public void delete(Categoria categoria) {
 		categoriaRepository.delete(categoria);
+	}
+
+	
+	public List<Categoria> findByUser(User user) {
+	    return categoriaRepository.findByUser(user);
 	}
 
 }
