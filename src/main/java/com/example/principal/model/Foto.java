@@ -1,22 +1,25 @@
 package com.example.principal.model;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.example.principal.auth.User;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+
 @Entity
 public class Foto {
 	@Id
@@ -30,10 +33,14 @@ public class Foto {
 	@NotBlank(message = "L'inserimento della foto è obbligatorio")
 	private String url;
 	private Boolean visibile = false;
+	
+	private boolean deleted = false;
+
+	
 	@ManyToOne
 	private User user;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	private List <Categoria> categorie;
 	public Foto() {
 		
@@ -51,6 +58,12 @@ public class Foto {
 		setVisibile(visibile);
 		setUser(user);
 		setsCategorie(categorie);
+	}
+	public boolean isDeleted() {
+		return deleted;
+	}
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 	public int getId() {
 		return id;
@@ -82,6 +95,17 @@ public class Foto {
 	public void setVisibile(Boolean visibile) {
 		this.visibile = visibile;
 	}
+	@Transient
+	public List<Map<String, String>> getCategorieInfo() {
+	    List<Map<String, String>> categorieInfo = new ArrayList<>();
+	    for (Categoria categoria : categorie) {
+	        Map<String, String> info = new HashMap<>();
+	        info.put("nome", categoria.getNome());
+	        info.put("descrizione", categoria.getDescrizione());
+	        categorieInfo.add(info);
+	    }
+	    return categorieInfo;
+	}
 	public List<Categoria> getCategorie() {
 		return categorie;
 	}
@@ -90,6 +114,12 @@ public class Foto {
 	}
 	public void setsCategorie(Categoria[] categorie) {
 		setCategorie(Arrays.asList(categorie));
+	}
+	@Transient
+	public Map<String, Object> getUserInfo() {
+	    Map<String, Object> userInfo = new HashMap<>();
+	    userInfo.put("id", user.getId());
+	    return userInfo;
 	}
 	public User getUser() {
 		return user;

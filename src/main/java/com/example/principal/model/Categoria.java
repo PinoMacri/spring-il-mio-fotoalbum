@@ -3,9 +3,12 @@ package com.example.principal.model;
 import java.util.List;
 
 import com.example.principal.auth.User;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,7 +16,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 public class Categoria {
 	@Id
@@ -26,7 +29,7 @@ public class Categoria {
 	private String descrizione;
 
 	@JsonIgnore
-	@ManyToMany(mappedBy = "categorie")
+	@ManyToMany(mappedBy = "categorie", fetch = FetchType.EAGER)
 	private List<Foto> foto;
 	@ManyToOne
     private User user;
@@ -82,5 +85,10 @@ public class Categoria {
 	public void setFoto(List<Foto> foto) {
 		this.foto = foto;
 	}
+	@Override
+	public String toString() {
+	    return "Categoria [id=" + id + ", nome=" + nome + "]";
+	}
+
 	
 }

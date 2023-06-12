@@ -57,6 +57,8 @@ public class CategoriaController {
         } else {
             model.addAttribute("message", "Non ci sono categorie");
         }
+        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"));
+		model.addAttribute("isAdmin", isAdmin);
         return "Categoria/index";
     }
 

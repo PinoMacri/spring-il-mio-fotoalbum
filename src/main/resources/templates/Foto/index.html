@@ -1,36 +1,120 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tua Pagina</title>
+<!-- Aggiungi la CDN di Bootstrap CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+	crossorigin="anonymous">
+
+
 </head>
 <body>
+	<!-- Modal di successo -->
+	<div class="modal fade" id="successModal" tabindex="-1" role="dialog"
+		aria-labelledby="successModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content bg-success text-white">
+				<div class="modal-header border-0 d-flex justify-content-center">
+					<h5 class="modal-title text-center" id="successModalLabel"></h5>
+					<button type="button" id="definitive" class="close my-close"
+						data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<!-- Puoi personalizzare il contenuto del modal di successo qui -->
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<h1>Foto</h1>
 	<h1>
 		Benvenuto <span th:text="${username}"></span>!
 	</h1>
 	<a th:if="${isAdmin}" th:href="@{/admin/foto/create}">Crea nuova
 		Foto</a>
-
-
-
-
-
-
-	<form th:action="@{/admin/foto/titolo}" method="post">
-		<label>Nome Foto</label> <input type="text" name="titolo"
-			th:value=${titolo}> <br> <input type="submit"
-			value="search">
+	<a href="/admin/foto/cestino" class="text-danger">Cestino</a>
+	<form method="post" action="/admin/foto/titolo">
+		<div class="form-group">
+			<label for="titolo">Titolo:</label> <input type="text" id="titolo"
+				name="titolo" class="form-control" th:value="${titoloValue}" />
+		</div>
+		<div class="form-group">
+			<label>Categorie:</label><br>
+			<div th:each="categoria : ${categorie}">
+				<input type="checkbox" id="categoria_${categoria.id}"
+					name="categorie" th:value="${categoria.id}"
+					th:checked="${categorieSelezionate != null and categorieSelezionate.contains(categoria.id)}" />
+				<label th:for="${'categoria_' + categoria.id}"
+					th:text="${categoria.nome}"></label><br>
+			</div>
+		</div>
+		<button type="submit" class="btn btn-primary">Cerca</button>
 	</form>
+
 	<ul>
-		<li th:each="foto : ${fotos}" th:object="${foto}"><a
-			th:href="@{/admin/foto/{id}(id=${foto.id})}" th:text="${foto.titolo}"></a>
-			<tr>
-				
-				<td th:if="${isSuperAdmin}" th:text="${foto.user.username}"></td>
-			</tr> <a th:href="@{/admin/foto/edit/{id} (id=${foto.id})}">Modifica</a> <a
-			th:href="@{/admin/foto/delete/{id} (id=${foto.id})}">Cancella</a></li>
+		<th:block th:each="foto : ${fotos}">
+			<li th:if="${!foto.deleted}"><a
+				th:href="@{/admin/foto/{id}(id=${foto.id})}"
+				th:text="${foto.titolo}"></a>
+				<tr>
+					<td th:if="${isSuperAdmin}" th:text="${foto.user.username}"></td>
+				</tr> <a th:href="@{/admin/foto/edit/{id}(id=${foto.id})}">Modifica</a>
+				<form th:action="@{/admin/foto/softdelete/{id}(id=${foto.id})}"
+					method="post">
+					<input type="hidden" name="_method" value="post" />
+					<button type="submit">Cancella</button>
+				</form></li>
+		</th:block>
 	</ul>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+<div class="pagination">
+    <ul>
+        <li th:class="${currentPage == 0 ? 'disabled' : ''}">
+            <a th:if="${currentPage != 0}" th:href="@{${'/admin/foto?page=' + (currentPage - 1)}}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+            <span th:if="${currentPage == 0}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </span>
+        </li>
+        <li th:each="page : ${totalPages != null ? #numbers.sequence(0, totalPages - 1) : {}}">
+            <a th:if="${currentPage != page}" th:href="@{${'/admin/foto?page=' + page}}" th:text="${page + 1}"></a>
+            <span th:if="${currentPage == page}" th:text="${page + 1}"></span>
+        </li>
+        <li th:class="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+            <a th:if="${currentPage != totalPages - 1}" th:href="@{${'/admin/foto?page=' + (currentPage + 1)}}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+            <span th:if="${currentPage == totalPages - 1}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </span>
+        </li>
+    </ul>
+</div>
+
+
+
+
 
 
 
@@ -38,5 +122,92 @@
 	<p th:unless="${not #lists.isEmpty(fotos)}" th:text="${message}"></p>
 	<a th:href="@{/admin/categoria}">Vai alle Categorie</a>
 	<a th:href="@{/logout}">Logout</a>
+
+
+	<!-- Metti qui i tuoi script JS, ad esempio jQuery, Bootstrap, ecc. -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+		crossorigin="anonymous"></script>
+	<!-- Metti qui i tuoi script JS, ad esempio jQuery, Bootstrap, ecc. -->
+	<script>
+	document.addEventListener('DOMContentLoaded', function() {
+	    // Controlla se è presente un messaggio di successo nella query string
+	    let urlParams = new URLSearchParams(window.location.search);
+	    let successMessage = urlParams.get('successMessage');
+
+	    // Ottenere il riferimento all'elemento del titolo del modal di successo
+	    let successModalTitle = document.getElementById('successModalLabel');
+
+	    if (successMessage) {
+	        // Decodifica il messaggio di successo
+	        let decodedSuccessMessage = decodeURIComponent(successMessage);
+
+	        if (decodedSuccessMessage.includes("Ripristino")) {
+	            // Aggiorna il titolo del modal di successo per "Foto ripristinata con successo"
+	            successModalTitle.textContent = 'Foto ripristinata con successo!';
+	        } else if (decodedSuccessMessage.includes("Elimina")) {
+	            // Altrimenti, il messaggio di successo contiene "Elimina"
+	            // Aggiorna il titolo del modal di successo per "Foto eliminata definitivamente"
+	            successModalTitle.textContent = 'Foto eliminata definitivamente!';
+	        } else if (decodedSuccessMessage.includes("Creazione")) {
+	            // Altrimenti, il messaggio di successo contiene "Creazione"
+	            // Aggiorna il titolo del modal di successo per "Creazione avvenuta con successo"
+	            successModalTitle.textContent = 'Creazione avvenuta con successo!';
+	        } else if (decodedSuccessMessage.includes("Modifica")) {
+	            // Altrimenti, il messaggio di successo contiene "Modifica"
+	            // Aggiorna il titolo del modal di successo per "Modifica avvenuta con successo"
+	            successModalTitle.textContent = 'Modifica avvenuta con successo!';
+	        }
+
+	        // Mostra il popup di successo
+	        let successModal = document.getElementById('successModal');
+	        successModal.classList.add('show');
+	        successModal.style.display = 'block';
+	        successModal.setAttribute('aria-hidden', 'false');
+	        document.body.classList.add('modal-open');
+
+	        // Aggiorna il messaggio di successo nel corpo del modal
+	        let successMessageElement = document.getElementById('successModalLabel');
+	        successMessageElement.textContent = decodedSuccessMessage;
+
+	        // Chiudi il popup di successo quando viene fatto clic sulla X o sullo sfondo
+	        let closeButton = document.getElementById('successModal').querySelector('.close');
+	        closeButton.addEventListener('click', function() {
+	            hideSuccessModal();
+	        });
+
+	        let modalContent = document.querySelector('#successModal .modal-content');
+	        modalContent.addEventListener('click', function(event) {
+	            if (event.target === modalContent) {
+	                hideSuccessModal();
+	            }
+	        });
+	    }
+	});
+
+	function hideSuccessModal() {
+	    // Nascondi il popup di successo
+	    let successModal = document.getElementById('successModal');
+	    successModal.style.display = 'none';
+	    successModal.setAttribute('aria-hidden', 'true');
+	    document.body.classList.remove('modal-open');
+
+	    // Redirect alla pagina senza il messaggio di successo nella query string
+	    let url = new URL(window.location.href);
+	    url.searchParams.delete('successMessage');
+	    window.location.href = url.toString();
+	}
+</script>
+
+
+	<style>
+.my-close {
+	border: none;
+	background-color: transparent;
+	font-size: 25px;
+	color: white;
+}
+</style>
 </body>
 </html>

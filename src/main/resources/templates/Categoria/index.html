@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Categorie</h1>
-<a th:href="@{/admin/categoria/create}">Crea nuova Categoria</a>
+<a th:if="${isAdmin}" th:href="@{/admin/categoria/create}">Crea nuova Categoria</a>
 
 
 <ul th:if="${not #lists.isEmpty(categorie)}">
