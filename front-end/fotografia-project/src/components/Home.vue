@@ -19,7 +19,7 @@ export default {
     methods: {
         getFoto() {
             axios
-                .get("http://localhost:8080/api/foto/lista")
+                .get("http://localhost:8080/api/foto/photos")
                 .then((response) => {
                     this.fotos = response.data;
                 })
